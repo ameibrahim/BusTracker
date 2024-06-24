@@ -16,7 +16,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Set EJS as the view engine
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs'); 
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -31,16 +31,17 @@ app.get('/track', async (req, res) => {
     console.log("API response:", response.data.latitude);
     let latitude = response.data.latitude;
     let longitude = response.data.longitude;
-    let coordinates = {
+    /*let coordinates = {
         lat: latitude,
         lng: longitude
       };
-      res.render("index.ejs", { coordinates });  
+      res.render("index.ejs", { coordinates });  */
+    res.json({lat: latitude, lng: longitude});
 
   } catch(error){
     console.error("Failed to make request:", error.message);
     throw error;
-  }
+  } 
 });
 
 
