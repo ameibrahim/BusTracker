@@ -1,0 +1,20 @@
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "LineString",
+        "coordinates": [
+            [
+                32.9947,
+                35.1929
+            ],
+            [
+                33.3246,
+                35.2297
+            ]
+        ]
+    },
+    "properties": {
+        "route_id": 9,
+        "route_name": "Campus - Güzelyurt"
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "type": "Feature",
+    "geometry": {
+        "type": "LineString",
+        "coordinates": [
+            [
+                33.9376,
+                35.1204
+            ],
+            [
+                33.3246,
+                35.2297
+            ]
+        ]
+    },
+    "properties": {
+        "route_id": 10,
+        "route_name": "Campus - Famagusta"
+    }
+}

@@ -16,60 +16,138 @@
             <p>Click here to start tracking :</p><button type="submit"> track</button>
         </form>
     </div>
-    <script>
-    let map;
-    let marker;
-    function initMap() {
-        const coordinates = { lat: <%=coordinates.lat%>, lng: <%= coordinates.lng %> };
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: coordinates,
-            zoom: 15
-        });
+    <script> 
+    
+let map;
+let marker;
 
-        const customIcon = {
-            url: '/images/bus.png',
-            scaledSize: new google.maps.Size(50, 50),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(25, 50)
-        };
+function initMap() {
+    const coordinates = { lat: 35.2268056, lng: 33.3202778 };
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: coordinates,
+        zoom: 15
+    });
 
-        marker = new google.maps.Marker({
-            position: coordinates,
-            map: map,
-            title: 'Initial Location',
-            icon: customIcon
-        });
+    const customIcon = {
+        url: '/images/bus.png',
+        scaledSize: new google.maps.Size(50, 50),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(25, 50)
+    };
 
-        // Start the tracking
-        startTracking();
+    marker = new google.maps.Marker({
+        position: coordinates,
+        map: map,
+        title: 'Initial Location',
+        icon: customIcon
+    });
+
+    // Start the tracking
+    //startTracking();
+
+    const itineraryGeoJSON = {
+    "type": "Feature",
+    "geometry": {
+        "type": "LineString",
+        "coordinates": [
+            [
+                33.3245,
+                35.2297
+            ],
+            [
+                33.3255,
+                35.2261
+            ],
+            [
+                33.3655,
+                35.1867
+            ],
+            [
+                33.3624,
+                35.1823
+            ],
+            [
+                33.3573,
+                35.1859
+            ],
+            [
+                33.3519,
+                35.1907
+            ],
+            [
+                33.3482,
+                35.1941
+            ],
+            [
+                33.3407,
+                35.1998
+            ],
+            [
+                33.3302,
+                35.2051
+            ],
+            [
+                33.3261,
+                35.2263
+            ],
+            [
+                33.3246,
+                35.2297
+            ]
+        ]
+    },
+    "properties": {
+        "route_id": 2,
+        "route_name": "Lefkoşa 2"
     }
+}; 
+    // Add the GeoJSON data to the map
+    map.data.addGeoJson(itineraryGeoJSON);
 
-    function updateMap(lat, lng) {
-      const newCoordinates = { lat, lng };
-      map.setCenter(newCoordinates);
-      marker.setPosition(newCoordinates);
+    // Style the GeoJSON line
+    map.data.setStyle({
+      strokeColor: '#FF0000',
+      strokeWeight: 2
+  });
+
+// Fit the map to the GeoJSON data
+const bounds = new google.maps.LatLngBounds();
+itineraryGeoJSON.geometry.coordinates.forEach((coord) => {
+bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
+});
+map.fitBounds(bounds);
+
+
+}
+/*
+function updateMap(lat, lng) {
+  const newCoordinates = { lat, lng };
+  map.setCenter(newCoordinates);
+  marker.setPosition(newCoordinates);
+}
+
+async function fetchCoordinates() {
+  try {
+    const response = await fetch('/track');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching coordinates:', error);
+  }
+}
+
+function startTracking() {
+  setInterval(async () => {
+    const coordinates = await fetchCoordinates();
+    if (coordinates) {
+      updateMap(coordinates.lat, coordinates.lng);
     }
+  }, 1000); // Fetch new coordinates every seconds
+} */
 
-    async function fetchCoordinates() {
-      try {
-        const response = await fetch('/track');
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error('Error fetching coordinates:', error);
-      }
-    }
 
-    function startTracking() {
-      setInterval(async () => {
-        const coordinates = await fetchCoordinates();
-        if (coordinates) {
-          updateMap(coordinates.lat, coordinates.lng);
-        }
-      }, 1000); // Fetch new coordinates every seconds
-    }
+window.initMap = initMap;
 
-    window.initMap = initMap;
     </script>
 
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN7RgjsbeM0aOcEk6zS8IEH-0AfxiJj9s&callback=initMap"></script>
