@@ -27,16 +27,18 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));   
 
 app.get('/', (req, res) => {
-  res.render("index.ejs", { coordinates,
+  /*res.render("index.ejs", { coordinates,
     itinerary: roads[0],
-   });
-});   
+   });*/
+   //res.render("leaflet.ejs"); 
+   res.render("manyroutes.ejs"); 
+});  
 
-
+ 
 
 app.get("/geo", (req, res) =>{
-  const route1Stops = filterByRouteId(roads, 10); 
-  res.json(route1Stops[0]);
+  const route1Stops = filterByRouteId(stops, 10); 
+  res.json(route1Stops);
 })
 
 

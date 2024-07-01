@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet Map with Routing and GeoJSON</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <style>
+        #map {
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="header">
+        <div class="logo">
+            <img src="images/neu logo.png" alt="NEU logo"> 
+        </div>
+        <div class="title">
+            <h3>NEAR EAST UNIVERSITY</h3>
+        </div>
+    </div>
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+    <div id="form">
+        <form action="/track" method="get">
+            <p>Click here to start tracking :</p><button type="submit"> track</button>
+        </form>
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([35.2268056, 33.3202778], 15);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add custom icon
+        var customIcon = L.icon({
+            iconUrl: '/images/bus.png',
+            iconSize: [50, 50],
+            iconAnchor: [25, 50]
+        });
+        var stopIcon = L.icon({
+            iconUrl: '/images/busStop.png',
+            iconSize: [50, 50],
+            iconAnchor: [25, 50]
+        });
+
+        // Add marker
+        var marker = L.marker([35.2268056, 33.3202778], { icon: customIcon }).addTo(map)
+            .bindPopup('Initial Location')
+            .openPopup();
+
+        // GeoJSON data
+        var itineraryGeoJSON = [
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                33.3245,
+                35.2297
+            ]
+        },
+        "properties": {
+            "stop_id": 1,
+            "stop_name": "Bus stop 1",
+            "route_id": 2
+        }
+    },
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                33.3255,
+                35.2261
+            ]
+        },
+        "properties": {
+            "stop_id": 2,
+            "stop_name": "Bus stop 2",
+            "route_id": 2
+        }
+    },
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                33.3655,
+                35.1867
+            ]
+        },
+        "properties": {
+            "stop_id": 3,
+            "stop_name": "Bus stop 3",
+            "route_id": 2
+        }
+    },
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                33.3624,
+                35.1823
+            ]
+        },
+        "properties": {
+            "stop_id": 4,
+            "stop_name": "Bus stop 4",
+            "route_id": 2
+        }
+    },
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                33.3573,
+                35.1859
+            ]
+        },
+        "properties": {
+            "stop_id": 5,
+            "stop_name": "Bus stop 5",
+            "route_id": 2
+        }
+    },
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                33.3519,
+                35.1907
+            ]
+        },
+        "properties": {
+            "stop_id": 6,
+            "stop_name": "Bus stop 6",
+            "route_id": 2
+        }
+    },
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                33.3482,
+                35.1941
+            ]
+        },
+        "properties": {
+            "stop_id": 7,
+            "stop_name": "Bus stop 7",
+            "route_id": 2
+        }
+    },
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                33.3407,
+                35.1998
+            ]
+        },
+        "properties": {
+            "stop_id": 8,
+            "stop_name": "Bus stop 8",
+            "route_id": 2
+        }
+    },
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                33.3302,
+                35.2051
+            ]
+        },
+        "properties": {
+            "stop_id": 9,
+            "stop_name": "Bus stop 9",
+            "route_id": 2
+        }
+    },
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                33.3261,
+                35.2263
+            ]
+        },
+        "properties": {
+            "stop_id": 10,
+            "stop_name": "Bus stop 10",
+            "route_id": 2
+        }
+    },
+    {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                33.3246,
+                35.2297
+            ]
+        },
+        "properties": {
+            "stop_id": 11,
+            "stop_name": "Bus stop 11",
+            "route_id": 2
+        }
+    }
+];
+
+        // Add the GeoJSON data to the map
+        var geojsonLayer = L.geoJSON(itineraryGeoJSON, {
+            style: function (feature) {
+                return { color: '#FF0000', weight: 2 };
+            }
+        }).addTo(map);
+
+        // Fit the map to the GeoJSON data
+        var bounds = geojsonLayer.getBounds();
+        map.fitBounds(bounds);
+
+        // Add routing control
+        L.Routing.control({
+            waypoints: [
+                L.latLng(35.2297, 33.3245),
+                L.latLng(35.2261, 33.3255),
+                L.latLng(35.1867, 33.3655),
+                L.latLng(35.1823, 33.3624),
+                L.latLng(35.1859, 33.3573),
+                L.latLng(35.1907, 33.3519),
+                L.latLng(35.1941, 33.3482),
+                L.latLng(35.1998, 33.3407),
+                L.latLng(35.2051, 33.3302),
+                L.latLng(35.2263, 33.3261),
+                L.latLng(35.2297, 33.3246)
+            ],
+            /*createMarker: function(i, waypoint, n) {
+                return L.marker(waypoint.latLng, {
+                    icon: stopIcon
+                });
+            },*/
+            routeWhileDragging: true,
+            addWaypoints: false
+        }).addTo(map);
+    </script>
+</body>
+</html>

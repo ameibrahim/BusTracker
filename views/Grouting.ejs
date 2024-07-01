@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps with Routing and GeoJSON</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #map {
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <%- include("partials/header.ejs") %>
+    <div id="header">
+        <div class="logo">
+            <img src="images/neu logo.png" alt="NEU logo"> 
+        </div>
+        <div class="title">
+            <h3>NEAR EAST UNIVERSITY</h3>
+        </div>
+    </div>
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+    <div class="routes">
+        <div> <input type="radio" name="route" id="1"><label for="1">Lefkoşa 1</label> </div>
+        <div> <input type="radio" name="route" id="2"><label for="2">Lefkoşa 2</label> </div>
+        <div> <input type="radio" name="route" id="3"><label for="3">Kızılbaş</label> </div>
+        <div> <input type="radio" name="route" id="4"><label for="4">Gönyeli 1</label> </div>
+        <div> <input type="radio" name="route" id="5"><label for="5">Gönyeli 2</label> </div>
+        <div> <input type="radio" name="route" id="6"><label for="6">Gönyeli / Metehan</label> </div>
+        <div> <input type="radio" name="route" id="7"><label for="7">Ortaköy / Yenikent</label> </div>
+        <div> <input type="radio" name="route" id="8"><label for="8">Campus - Kyrenia</label> </div>
+        <div> <input type="radio" name="route" id="9"><label for="9">Campus - Güzelyurt</label> </div>
+        <div> <input type="radio" name="route" id="10"><label for="10">Campus - Famagusta</label> </div>
+        
+
+    </div>
+    <div id="form">
+        <form action="/track" method="get">
+            <p>Click here to start tracking :</p><button type="submit"> track</button>
+        </form>
+    </div>
+    <script>
+        let map;
+        let marker;
+        let directionsService;
+        let directionsRenderer;
+
+        function initMap() {
+            const coordinates = { lat: 35.2268056, lng: 33.3202778 };
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: coordinates,
+                zoom: 15
+            });
+
+            const busIcon = {
+                url: '/images/bus.png',
+                scaledSize: new google.maps.Size(50, 50),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(25, 50)
+            };
+            const stopIcon = {
+                url: '/images/busStop.png',
+                scaledSize: new google.maps.Size(50, 50),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(25, 50)
+            };
+
+            marker = new google.maps.Marker({
+                position: coordinates,
+                map: map,
+                title: 'Initial Location',
+                icon: busIcon
+            });
+
+            // Initialize the directions service and renderer
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer({
+                map: map,
+                polylineOptions: {
+                    strokeColor: '#FF0000',
+                    strokeWeight: 2
+                }
+            });
+
+            // Define the waypoints from the GeoJSON data
+            const waypoints = [
+                { location: new google.maps.LatLng(35.2297, 33.3245) },
+                { location: new google.maps.LatLng(35.2261, 33.3255) },
+                { location: new google.maps.LatLng(35.1867, 33.3655) },
+                { location: new google.maps.LatLng(35.1823, 33.3624) },
+                { location: new google.maps.LatLng(35.1859, 33.3573) },
+                { location: new google.maps.LatLng(35.1907, 33.3519) },
+                { location: new google.maps.LatLng(35.1941, 33.3482) },
+                { location: new google.maps.LatLng(35.1998, 33.3407) },
+                { location: new google.maps.LatLng(35.2051, 33.3302) },
+                { location: new google.maps.LatLng(35.2263, 33.3261) },
+                { location: new google.maps.LatLng(35.2297, 33.3246) }
+            ];
+
+            // Define the start and end points
+            const start = waypoints[0].location;
+            const end = waypoints[waypoints.length - 1].location;
+
+            // Remove the first and last waypoint from the waypoints array
+            waypoints.shift();
+            waypoints.pop();
+
+            // Calculate and display the route
+            calculateAndDisplayRoute(start, end, waypoints);
+        }
+
+        function calculateAndDisplayRoute(start, end, waypoints) {
+            directionsService.route({
+                origin: start,
+                destination: end,
+                waypoints: waypoints,
+                optimizeWaypoints: false,
+                travelMode: google.maps.TravelMode.DRIVING
+            }, function(response, status) {
+                if (status === google.maps.DirectionsStatus.OK) {
+                    directionsRenderer.setDirections(response);
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            });
+        }
+
+        window.initMap = initMap;
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN7RgjsbeM0aOcEk6zS8IEH-0AfxiJj9s&callback=initMap"></script>
+</body>
+</html>

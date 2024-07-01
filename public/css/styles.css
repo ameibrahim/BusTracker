@@ -44,3 +44,10 @@
     font-family: "Open Sans", sans-serif;
     font-optical-sizing: auto;
   }
+  .routes {
+    display: flex;
+    flex-direction: row;
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    justify-content: space-around;
+  }
