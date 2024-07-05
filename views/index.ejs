@@ -6,7 +6,7 @@
             <img src="images/neu logo.png" alt="NEU logo"> 
         </div>
         <div class="title">
-            <h3>NEAR EAST UNIVERSITY</h3>
+            <h3>NEU BUS TRACKING SYSTEM</h3>
         </div>
     </div>
     <div id="map-container">
@@ -28,8 +28,15 @@
     </div>
     <div id="form">
         <form action="/track" method="get">
-            <p>Click here to start tracking :</p><button type="submit"> track</button>
+            <table>
+                <tr>
+                    <td><h3>Click here to start tracking :</h3></td><td><button onclick="startTracking()">Satellite tracker</button></td><td><button onclick="initMap()">Refresh Bus Map</button></td>
+                    <!--<button type="submit"> Track Bus</button>-->
+                </tr>
+            </table>
         </form>
+        
+        
     </div>
 </body>
     <script>
@@ -216,7 +223,7 @@
             calculateAndDisplayRoute(start, end, defaultWaypoints);
 
             // Start the tracking
-            // ();
+            startTracking();
         }
 
         function calculateAndDisplayRoute(start, end, waypoints) {
@@ -224,7 +231,7 @@
                 location: new google.maps.LatLng(point.lat, point.lng),
                 stopover: true
             }));
-            
+
             directionsService.route({
                 origin: new google.maps.LatLng(start.lat, start.lng),
                 destination: new google.maps.LatLng(end.lat, end.lng),
@@ -240,7 +247,7 @@
             });
         }
 
-        /*
+        
         function updateMap(lat, lng) {
             const newCoordinates = { lat, lng };
             map.setCenter(newCoordinates);
@@ -257,14 +264,14 @@
                 }
         }
 
-        function  () {
+        function  startTracking() {
             setInterval(async () => {
                 const coordinates = await fetchCoordinates();
                 if (coordinates) {
                     updateMap(coordinates.lat, coordinates.lng);
                 }
             }, 1000); // Fetch new coordinates every seconds
-        } */
+        } 
 
         window.initMap = initMap;
     </script>
