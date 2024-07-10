@@ -44,7 +44,7 @@
     font-optical-sizing: auto;
   }
   .routes {
-    width: 20%;
+    width: 25%;
     display: flex;
     flex-direction: column;
     font-family: "Open Sans", sans-serif;
@@ -65,16 +65,105 @@
     display: flex;
     justify-content: center;
     padding: 10px;
-    background-color: #ffff;
     border: 1px solid #ccc;
     border-radius: 15px;
     margin: 5px;
+    font-weight: bold;
+    width: 75%;
+    align-self: center;
   }
   input[type="radio"] {
     display: none;
   }
-  .route-name:hover {
-    background-color: #8F2A46;
+  #route-name1:hover {
+    color: #c30000;
+    background-color: white;
+    border: 1px solid #c30000;
+    
+  }
+  #route-name2:hover {
+    color: #0e9305;
+    background-color: white;
+    border: 1px solid #0e9305;
+  }
+  #route-name3:hover {
+    color: #607d8b;
+    background-color: white;
+    border: 1px solid #607d8b;
+  }
+  #route-name4:hover {
+    color: #9c27b0;
+    background-color: white;
+    border: 1px solid #9c27b0;
+  }
+  #route-name5:hover {
+    color: #283333;
+    background-color: white;
+    border: 1px solid #283333;
+  }
+  #route-name6:hover {
+    color: #3949ab;
+    background-color: white;
+    border: 1px solid #3949ab;
+  }
+  #route-name7:hover {
+    color: #8d6a5e;
+    background-color: white;
+    border: 1px solid #8d6a5e;
+  }
+  #route-name8:hover {
+    color: #c2185b;
+    background-color: white;
+    border: 1px solid #c2185b;
+  }
+  #route-name9:hover {
+    color: #4298d5;
+    background-color: white;
+    border: 1px solid #4298d5;
+  }
+  #route-name10:hover {
+    color: #ff6849;
+    background-color: white;
+    border: 1px solid #ff6849;
+  }
+  #route-name1 {
+    background-color: #c30000;
+    color: white;
+  }
+  #route-name2 {
+    background-color: #0e9305;
+    color: white;
+  }
+  #route-name3 {
+    background-color: #607d8b;
+    color: white;
+  }
+  #route-name4 {
+    background-color: #9c27b0;
+    color: white;
+  }
+  #route-name5 {
+    background-color: #283333;
+    color: white;
+  }
+  #route-name6 {
+    background-color: #3949ab;
+    color: white;
+  }
+  #route-name7 {
+    background-color: #8d6a5e;
+    color: white;
+  }
+  #route-name8 {
+    background-color: #c2185b;
+    color: white;
+  }
+  #route-name9 {
+    background-color: #4298d5;
+    color: white;
+  }
+  #route-name10 {
+    background-color: #ff6849;
     color: white;
   }
   label{

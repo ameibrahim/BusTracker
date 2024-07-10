@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
     itinerary: roads[0],
    });*/
    //res.render("leaflet.ejs"); 
-   res.render("index.ejs"); 
+   res.render("colors.ejs"); 
 });  
 
  

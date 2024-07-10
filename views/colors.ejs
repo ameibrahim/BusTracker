@@ -44,6 +44,20 @@
         let marker;
         let directionsService;
         let directionsRenderer;
+        let currentDirectionsRenderer;
+        const itineraryColors = {
+            '1': '#c30000',
+            '2': '#0e9305',
+            '3': '#607d8b',
+            '4': '#9c27b0',
+            '5': '#283333',
+            '6': '#3949ab',
+            '7': '#8d6a5e',
+            '8': '#c2185b',
+            '9': '#4298d5',
+            '10': '#ff6849'
+        };
+        
         let waypointsData = {
             "1": [
                 { lat: 35.2297, lng: 33.3245 },
@@ -182,24 +196,15 @@
                 anchor: new google.maps.Point(25, 50)
             };
 
-            marker = new google.maps.Marker({
+            new google.maps.Marker({
                 position: coordinates,
                 map: map,
                 title: 'Initial Location',
                 icon: busIcon
             });
 
-            // Initialize the directions service and renderer
             directionsService = new google.maps.DirectionsService();
-            directionsRenderer = new google.maps.DirectionsRenderer({
-                map: map,
-                polylineOptions: {
-                    strokeColor: '#8F2A46',
-                    strokeWeight: 4
-                }
-            });
 
-            // Add event listeners to radio buttons
             const radioButtons = document.querySelectorAll('input[type=radio][name=route]');
             radioButtons.forEach(button => {
                 button.addEventListener('change', function() {
@@ -209,43 +214,55 @@
                         if (waypoints) {
                             const start = waypoints[0];
                             const end = waypoints[waypoints.length - 1];
-                            calculateAndDisplayRoute(start, end, waypoints);
+                            const strokeColor = itineraryColors[routeId];
+                            calculateAndDisplayRoute(start, end, waypoints, strokeColor);
                         }
-                    }
+                     }
                 });
             });
-
-            // Default route to display
+            
+            //default route to display
             const defaultRouteId = '1';
             const defaultWaypoints = waypointsData[defaultRouteId];
             const start = defaultWaypoints[0];
             const end = defaultWaypoints[defaultWaypoints.length - 1];
-            calculateAndDisplayRoute(start, end, defaultWaypoints);
+            const defaultStrokeColor = itineraryColors[defaultRouteId];
+            calculateAndDisplayRoute(start, end, defaultWaypoints, defaultStrokeColor);
 
-            // Start the tracking
+            //Start the tracking
             //startTracking();
+    }
+
+        function calculateAndDisplayRoute(origin, destination, waypoints, strokeColor) {
+        if(currentDirectionsRenderer){
+            currentDirectionsRenderer.setMap(null);
         }
-
-        function calculateAndDisplayRoute(start, end, waypoints) {
-            const waypts = waypoints.slice(1, -1).map(point => ({
-                location: new google.maps.LatLng(point.lat, point.lng),
-                stopover: true
-            }));
-
-            directionsService.route({
-                origin: new google.maps.LatLng(start.lat, start.lng),
-                destination: new google.maps.LatLng(end.lat, end.lng),
-                waypoints: waypts,
-                optimizeWaypoints: false,
+        
+            directionsService.route(
+            {
+                origin: origin,
+                destination: destination,
+                waypoints: waypoints.slice(1, waypoints.length - 1).map(location => ({ location: location, stopover: true })),
+                optimizeWaypoints: true,
                 travelMode: google.maps.TravelMode.DRIVING
-            }, function(response, status) {
-                if (status === google.maps.DirectionsStatus.OK) {
-                    directionsRenderer.setDirections(response);
+            },
+            (response, status) => {
+                if (status === 'OK') {
+                    const rendererOptions = {
+                        map: map,
+                        polylineOptions: {
+                            strokeColor: strokeColor,
+                            strokeWeight: 4
+                        }
+                    };
+                    currentDirectionsRenderer = new google.maps.DirectionsRenderer(rendererOptions);
+                    currentDirectionsRenderer.setDirections(response);
                 } else {
                     window.alert('Directions request failed due to ' + status);
                 }
-            });
-        }
+            }
+        );
+    }
 
         
         function updateMap(lat, lng) {
