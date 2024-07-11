@@ -1,0 +1,343 @@
+
+<%- include("partials/header.ejs") %>
+<body>
+    <div id="header">
+        <div class="logo">
+            <img src="images/neu logo.png" alt="NEU logo"> 
+        </div>
+        <div class="title">
+            <h3>NEU BUS TRACKING SYSTEM</h3>
+        </div>
+    </div>
+    <div id="map-container">
+        <div id="map"></div>
+    
+        <div class="routes">
+            <div id="route-header"> <img src="images/map.png" alt="map logo" height="30px"><h3>Bus Routes</h3></div>
+            <div id="route-name1" class="route-name"> <input type="radio" name="route" id="1"><label for="1">Lefkoşa 1</label> </div>
+            <div id="route-name2" class="route-name"> <input type="radio" name="route" id="2"><label for="2">Lefkoşa 2</label> </div>
+            <div id="route-name3" class="route-name"> <input type="radio" name="route" id="3"><label for="3">Kızılbaş</label> </div>
+            <div id="route-name4" class="route-name"> <input type="radio" name="route" id="4"><label for="4">Gönyeli 1</label> </div>
+            <div id="route-name5" class="route-name"> <input type="radio" name="route" id="5"><label for="5">Gönyeli 2</label> </div>
+            <div id="route-name6" class="route-name"> <input type="radio" name="route" id="6"><label for="6">Gönyeli / Metehan</label> </div>
+            <div id="route-name7" class="route-name"> <input type="radio" name="route" id="7"><label for="7">Ortaköy / Yenikent</label> </div>
+            <div id="route-name8" class="route-name"> <input type="radio" name="route" id="8"><label for="8">Campus - Kyrenia</label> </div>
+            <div id="route-name9" class="route-name"> <input type="radio" name="route" id="9"><label for="9">Campus - Güzelyurt</label> </div>
+            <div id="route-name10" class="route-name"> <input type="radio" name="route" id="10"><label for="10">Campus - Famagusta</label> </div>
+        </div>
+    </div>
+    <div id="form">
+       <!--  <form action="/track" method="get">
+            <table>
+                <tr>
+                    <td><h3>Click here to start tracking :</h3></td><td><button onclick="startTracking()">Satellite tracker</button></td><td><button onclick="window.initMap">Refresh Bus Map</button></td>
+                    <button type="submit"> Track Bus</button>
+                </tr>
+            </table>
+        </form> -->
+        
+        
+    </div>
+</body>
+    <script>
+        let map;
+        let marker;
+        let directionsService;
+        let directionsRenderer;
+        let currentDirectionsRenderer;
+        const itineraryColors = {
+            '1': '#c30000',
+            '2': '#0e9305',
+            '3': '#607d8b',
+            '4': '#9c27b0',
+            '5': '#283333',
+            '6': '#3949ab',
+            '7': '#8d6a5e',
+            '8': '#c2185b',
+            '9': '#4298d5',
+            '10': '#ff6849'
+        };
+        
+        let waypointsData = {
+            "1": [
+                { lat: 35.2297, lng: 33.3245 },
+                { lat: 35.2261, lng: 33.3255 },
+                { lat: 35.2106, lng: 33.3436 },
+                { lat: 35.211, lng: 33.3707 },
+                { lat: 35.2113, lng: 33.3758 },
+                { lat: 35.2093, lng: 33.3667 },
+                { lat: 35.2021, lng: 33.3674 },
+                { lat: 35.199, lng: 33.3678 },
+                { lat: 35.1948, lng: 33.3678 },
+                { lat: 35.2263, lng: 33.3261},
+                { lat: 35.188, lng: 33.3661 },
+                { lat: 35.2297, lng: 33.3246}
+            ],
+            "2": [
+                { lat: 35.2297, lng: 33.3245 },
+                { lat: 35.2261, lng: 33.3255 },
+                { lat: 35.1867, lng: 33.3655 },
+                { lat: 35.1823, lng: 33.3624 },
+                { lat: 35.1859, lng: 33.3573 },
+                { lat: 35.1907, lng: 33.3519 },
+                { lat: 35.1941, lng: 33.3482 },
+                { lat: 35.1998, lng: 33.3407 },
+                { lat: 35.2051, lng: 33.3302 },
+                { lat: 35.2263, lng: 33.3261 },
+                { lat: 35.2297, lng: 33.3246 }
+
+            ],
+            "3": [
+                { lat: 35.2297, lng: 33.3245 },
+                { lat: 35.2261, lng: 33.3255 },
+                { lat: 35.2031, lng: 33.3513 },
+                { lat: 35.1993, lng: 33.3568 },
+                { lat: 35.2025, lng: 33.3639 },
+                { lat: 35.2034, lng: 33.3688 },
+                { lat: 35.2032, lng: 33.3732 },
+                { lat: 35.203, lng: 33.3768 },
+                { lat: 35.2087, lng: 33.3787 },
+                { lat: 35.2157, lng: 33.3782 },
+                { lat: 35.2202, lng: 33.3774 },
+                { lat: 35.2263, lng: 33.3261 },
+                { lat: 35.2297, lng: 33.3246 }
+            ],
+            "4": [
+                { lat: 35.2297, lng: 33.3245 },
+                { lat: 35.2261, lng: 33.3255 },
+                { lat: 35.2094, lng: 33.2983 },
+                { lat: 35.2087, lng: 33.3074 },
+                { lat: 35.2118, lng: 33.3072 },
+                { lat: 35.2147, lng: 33.308 },
+                { lat: 35.2124, lng: 33.3108 },
+                { lat: 35.2103, lng: 33.3147 },
+                { lat: 35.2093, lng: 33.3184 },
+                { lat: 35.2127, lng: 33.3342},
+                { lat: 35.2263, lng: 33.3261 },
+                { lat: 35.2297, lng: 33.3246}
+            ],
+            "5": [
+                { lat: 35.2297, lng: 33.3245 },
+                { lat: 35.2261, lng: 33.3255 },
+                { lat: 35.21, lng: 33.3149 },
+                { lat: 35.2123, lng: 33.3108 },
+                { lat: 35.2182, lng: 33.3034 },
+                { lat: 35.2217, lng: 33.3009 },
+                { lat: 35.2256, lng: 33.2984 },
+                { lat: 35.2263, lng: 33.3261 },
+                { lat: 35.2297, lng: 33.3246 }
+            ],
+            "6": [
+                { lat: 35.2297, lng: 33.3243 },
+                { lat: 35.2261, lng: 33.3255 },
+                { lat: 35.2086, lng: 33.3185 },
+                { lat: 35.208, lng: 33.3135 },
+                { lat: 35.2083, lng: 33.3074 },
+                { lat: 35.2101, lng: 33.2934 },
+                { lat: 35.1981, lng: 33.3117 },
+                { lat: 35.1938, lng: 33.3211 },
+                { lat: 35.1914, lng: 33.3256 },
+                { lat: 35.2018, lng: 33.3223 },
+                { lat: 35.205, lng: 33.3173 },
+                { lat: 35.2088, lng: 33.3182 },
+                { lat: 35.2263, lng: 33.3261 },
+                { lat: 35.2297, lng: 33.3246 }
+            ],
+            "7": [
+                { lat: 35.2297, lng: 33.3244 },
+                { lat: 35.2259, lng: 33.3257 },
+                { lat: 35.2077, lng: 33.3399 },
+                { lat: 35.2009, lng: 33.3412 },
+                { lat: 35.1986, lng: 33.3338 },
+                { lat: 35.1969, lng: 33.3311 },
+                { lat: 35.1991, lng: 33.3272 },
+                { lat: 35.2011, lng: 33.3236 },
+                { lat: 35.2263, lng: 33.3261 },
+                { lat: 35.2297, lng: 33.3246 }
+            ],
+            "8": [
+                { lat: 35.3326, lng: 33.3144 },
+                { lat: 35.3304, lng: 33.3257 },
+                { lat: 35.3338, lng: 33.3325 },
+                { lat: 35.3342, lng: 33.3404 },
+                { lat: 35.3338, lng: 33.3316 },
+                { lat: 35.33, lng: 33.3274 },
+                { lat: 35.2858, lng: 33.2796 },
+                { lat: 35.2297, lng: 33.3246 }
+            ],
+            "9": [
+                { lat: 35.1929, lng: 32.9947 },
+                { lat: 35.2297, lng: 33.3246 }
+            ],
+            "10": [
+                { lat: 35.1204, lng: 33.9376},
+                { lat: 35.2297, lng: 33.3246 }
+            ]
+            // Add waypoints for other routes as needed
+        };
+
+        function getColoredIcon(color) {
+            return {
+                path: google.maps.SymbolPath.CIRCLE,
+                fillColor: color,
+                fillOpacity: 1,
+                scale: 10,
+                strokeColor: 'white',
+                strokeWeight: 2
+            };
+        }
+
+        function initMap() {
+            const coordinates = { lat: 35.2268056, lng: 33.3202778 };
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: coordinates,
+                zoom: 15
+            });
+
+            const busIcon = {
+                url: '/images/bus.png',
+                scaledSize: new google.maps.Size(50, 50),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(25, 50)
+            };
+
+            new google.maps.Marker({
+                position: coordinates,
+                map: map,
+                title: 'Initial Location',
+                icon: busIcon
+            });
+
+            directionsService = new google.maps.DirectionsService();
+
+            const radioButtons = document.querySelectorAll('input[type=radio][name=route]');
+            radioButtons.forEach(button => {
+                button.addEventListener('change', function() {
+                    if (this.checked) {
+                        const routeId = this.id;
+                        const waypoints = waypointsData[routeId];
+                        if (waypoints) {
+                            const start = waypoints[0];
+                            const end = waypoints[waypoints.length - 1];
+                            const strokeColor = itineraryColors[routeId];
+                            calculateAndDisplayRoute(start, end, waypoints, strokeColor);
+                        }
+                     }
+                });
+            });
+            
+            //default route to display
+            const defaultRouteId = '1';
+            const defaultWaypoints = waypointsData[defaultRouteId];
+            const start = defaultWaypoints[0];
+            const end = defaultWaypoints[defaultWaypoints.length - 1];
+            const defaultStrokeColor = itineraryColors[defaultRouteId];
+            calculateAndDisplayRoute(start, end, defaultWaypoints, defaultStrokeColor);
+
+            //Start the tracking
+            //startTracking();
+    }
+
+        function calculateAndDisplayRoute(origin, destination, waypoints, strokeColor) {
+        if(currentDirectionsRenderer){
+            currentDirectionsRenderer.setMap(null);
+        }
+        
+            directionsService.route(
+            {
+                origin: origin,
+                destination: destination,
+                waypoints: waypoints.slice(1, waypoints.length - 1).map(location => ({ location: location, stopover: true })),
+                optimizeWaypoints: true,
+                travelMode: google.maps.TravelMode.DRIVING
+            },
+            (response, status) => {
+                if (status === 'OK') {
+                    const rendererOptions = {
+                        map: map,
+                        polylineOptions: {
+                            strokeColor: strokeColor,
+                            strokeWeight: 4
+                        },
+                        suppressMarkers: true
+                    };
+                    currentDirectionsRenderer = new google.maps.DirectionsRenderer(rendererOptions);
+                    currentDirectionsRenderer.setDirections(response);
+                    addWaypointMarkers(waypoints, strokeColor);
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            }
+        );
+    }
+
+
+function addWaypointMarkers(waypoints, color) {
+    // Clear existing markers if needed
+    if (window.waypointMarkers) {
+        window.waypointMarkers.forEach(marker => marker.setMap(null));
+    }
+    window.waypointMarkers = [];
+
+    // Add start marker
+    const startMarker = new google.maps.Marker({
+        position: waypoints[0],
+        map: map,
+        icon: getColoredIcon(color),
+        title: 'Start'
+    });
+    window.waypointMarkers.push(startMarker);
+
+    // Add intermediate waypoint markers
+    for (let i = 1; i < waypoints.length - 1; i++) {
+        const marker = new google.maps.Marker({
+            position: waypoints[i],
+            map: map,
+            icon: getColoredIcon(color),
+            title: `Bus Stop ${i}`
+        });
+        window.waypointMarkers.push(marker);
+    }
+
+    // Add end marker
+    const endMarker = new google.maps.Marker({
+        position: waypoints[waypoints.length - 1],
+        map: map,
+        icon: getColoredIcon(color),
+        title: 'End'
+    });
+    window.waypointMarkers.push(endMarker);
+}
+        
+        function updateMap(lat, lng) {
+            const newCoordinates = { lat, lng };
+            map.setCenter(newCoordinates);
+            marker.setPosition(newCoordinates);
+        }
+
+        async function fetchCoordinates() {
+            try {
+                const response = await fetch('/track');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching coordinates:', error);
+                }
+        }
+
+        
+
+        function  startTracking() {
+            setInterval(async () => {
+                const coordinates = await fetchCoordinates();
+                if (coordinates) {
+                    updateMap(coordinates.lat, coordinates.lng);
+                }
+            }, 1000); // Fetch new coordinates every seconds
+        } 
+
+        window.initMap = initMap;
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN7RgjsbeM0aOcEk6zS8IEH-0AfxiJj9s&callback=initMap"></script>
+</body>
+</html>
