@@ -191,17 +191,17 @@
             const coordinates = { lat: 35.2268056, lng: 33.3202778 };
             map = new google.maps.Map(document.getElementById('map'), {
                 center: coordinates,
-                zoom: 15
+                zoom: 20,
             });
 
             const busIcon = {
                 url: '/images/bus.png',
-                scaledSize: new google.maps.Size(50, 50),
+                scaledSize: new google.maps.Size(25, 25),
                 origin: new google.maps.Point(0, 0),
                 anchor: new google.maps.Point(25, 50)
             };
 
-            new google.maps.Marker({
+            marker = new google.maps.Marker({
                 position: coordinates,
                 map: map,
                 title: 'Initial Location',
@@ -235,7 +235,7 @@
             calculateAndDisplayRoute(start, end, defaultWaypoints, defaultStrokeColor);
 
             //Start the tracking
-            //startTracking();
+            startTracking();
     }
 
         function calculateAndDisplayRoute(origin, destination, waypoints, strokeColor) {
@@ -312,6 +312,7 @@ function addWaypointMarkers(waypoints, color) {
         function updateMap(lat, lng) {
             const newCoordinates = { lat, lng };
             map.setCenter(newCoordinates);
+            map.setZoom(20);
             marker.setPosition(newCoordinates);
         }
 
@@ -333,7 +334,7 @@ function addWaypointMarkers(waypoints, color) {
                 if (coordinates) {
                     updateMap(coordinates.lat, coordinates.lng);
                 }
-            }, 1000); // Fetch new coordinates every seconds
+            }, 5000); // Fetch new coordinates every seconds
         } 
 
         window.initMap = initMap;

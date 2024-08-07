@@ -43,7 +43,7 @@ app.get("/geo", (req, res) =>{
 
 
 
-app.get('/track', async (req, res) => {
+/*app.get('/track', async (req, res) => {
   try{
     const response = await axios.get("https://api.wheretheiss.at/v1/satellites/25544");
     console.log("API response:", response.data.latitude);
@@ -53,15 +53,23 @@ app.get('/track', async (req, res) => {
         lat: latitude,
         lng: longitude
       };
-      res.render("index.ejs", { coordinates });  */
+      res.render("index.ejs", { coordinates }); star backslash here
     res.json({lat: latitude, lng: longitude});
 
   } catch(error){
     console.error("Failed to make request:", error.message);
     throw error;
   } 
-});
-
+});*/
+app.get('/track', async (req, res) => {
+  try{
+    const response = await axios.post("http://localhost:4000/locate");
+    console.log(response.data);
+    res.json(response.data);  
+  }catch(err){
+    console.log(err);
+  }
+})
 
 
 
