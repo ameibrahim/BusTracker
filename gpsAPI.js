@@ -14,7 +14,6 @@ let token;
 async function getAuthenticationToken(){
     try{
         const response = await axios.post(`https://connect.paj-gps.de/api/v1/login?email=${email}&password=${password}`);
-        //console.log(response.data.success);
         return response.data.success.token;
     }catch(err){
         console.log(err);
@@ -26,7 +25,6 @@ async function getLastLocation(token){
       };
     try{
         const response = await axios.get(`https://connect.paj-gps.de/api/v1/trackerdata/${deviceID}/last_points?lastPoints=lastPoints&gps=0&sort=desc` , config);
-        //console.log(response.data.success[0]);
         let lastLocation = {
             lat: response.data.success[0].lat,
             lng: response.data.success[0].lng
@@ -39,7 +37,6 @@ async function getLastLocation(token){
 
 app.post("/locate", async (req, res)=>{
     token = await getAuthenticationToken();
-    //console.log(token);
     const busLocation = await getLastLocation(token);
     res.json(busLocation);
     
