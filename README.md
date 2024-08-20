@@ -10,7 +10,7 @@ INSTALLATION:
     ```
 2. Navigate into the project directory:
     ```
-    cd yourprojectname
+    cd GPS_Tracker
     ```
 3. Install the dependencies:
     ```
